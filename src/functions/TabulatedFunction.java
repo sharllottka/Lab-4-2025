@@ -1,5 +1,9 @@
 package functions;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 public interface TabulatedFunction extends Function {
     int getPointsCount();
     FunctionPoint getPoint(int index);
@@ -10,5 +14,9 @@ public interface TabulatedFunction extends Function {
     void setPointY(int index, double y);
     void deletePoint(int index);
     void addPoint(FunctionPoint point) throws InappropriateFunctionPointException;
+
+    void writeExternal(ObjectOutput out) throws IOException;
+
+    void readExternal(ObjectInput in) throws IOException, ClassNotFoundException;
 }
 

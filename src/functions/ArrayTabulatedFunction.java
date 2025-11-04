@@ -213,6 +213,16 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
     }
 
     @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("ArrayTabulatedFunction:\n");
         for (int i = 0; i < pointsCount; i++) {

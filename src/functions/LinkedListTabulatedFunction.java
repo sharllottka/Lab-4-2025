@@ -1,12 +1,13 @@
 package functions;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
 // табулированная функция на двусвязном списке
-public class LinkedListTabulatedFunction implements TabulatedFunction, Serializable {
-// public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable {
+//public class LinkedListTabulatedFunction implements TabulatedFunction, Serializable {
+public class LinkedListTabulatedFunction implements TabulatedFunction, Externalizable {
+
     private class FunctionNode {
         FunctionPoint point;
         FunctionNode next;
@@ -21,6 +22,20 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
     private int pointsCount;
     private static final double EPS = 1e-9;
     private FunctionPoint[] points;
+
+    public LinkedListTabulatedFunction() {
+        head = new FunctionNode(new FunctionPoint());
+        head.next = head;
+        head.prev = head;
+        pointsCount = 0;
+    }
+
+    public LinkedListTabulatedFunction(TabulatedFunction func) {
+        this();
+        for (int i = 0; i < func.getPointsCount(); i++) {
+            addNodeToTail(func.getPoint(i));
+        }
+    }
 
     public LinkedListTabulatedFunction(FunctionPoint[] points) {
         if (points == null || points.length < 2) {
@@ -178,23 +193,28 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Serializa
         }
         return Double.NaN;
     }
-    /* @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(pointsCount);
+     @Override
+     public void writeExternal(ObjectOutput out) throws IOException {
+         out.writeInt(pointsCount);
+        FunctionNode current = head.next;
         for (int i = 0; i < pointsCount; i++) {
-            out.writeDouble(points[i].getX());
-            out.writeDouble(points[i].getY());
+            out.writeDouble(current.point.getX());
+            out.writeDouble(current.point.getY());
+            current = current.next;
         }
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        pointsCount = in.readInt();
-        points = new FunctionPoint[pointsCount];
-        for (int i = 0; i < pointsCount; i++) {
+        head = new FunctionNode(new FunctionPoint());
+        head.next = head;
+        head.prev = head;
+        pointsCount = 0;
+        int count = in.readInt();
+        for (int i = 0; i < count; i++) {
             double x = in.readDouble();
             double y = in.readDouble();
-            points[i] = new FunctionPoint(x, y);
+            addNodeToTail(new FunctionPoint(x, y));
         }
-    }*/
+    }
 }

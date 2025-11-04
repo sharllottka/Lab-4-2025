@@ -4,6 +4,7 @@ import functions.basic.Exp;
 import functions.basic.Log;
 import functions.basic.Sin;
 import functions.Function;
+import functions.meta.Composition;
 
 
 import java.io.*;
@@ -78,36 +79,38 @@ public class Main {
             System.out.println("x = " + i + ", log(x) = " + log.getFunctionValue(i) + ", tabLog(x) = " + tabLog.getFunctionValue(i) + ", readLog(x) = " + inputLog.getFunctionValue(i));
         }
 
-        Function logExp = new Function() {
-            @Override
-            public double getLeftDomainBorder() {
-                return exp.getLeftDomainBorder();
-            }
+        Function logFunc = new Log(Math.E);
+        Function logExp = new Composition(logFunc, exp);
 
-            @Override
-            public double getRightDomainBorder() {
-                return exp.getRightDomainBorder();
-            }
-
-            @Override
-            public double getFunctionValue(double x) {
-                return Math.log(exp.getFunctionValue(x));
-            }
-        };
-        TabulatedFunction tabLogExp = TabulatedFunctions.tabulate(logExp, 0.1, 10, 11);
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("logExp.ser"))) {
-            out.writeObject(tabLogExp);
+        TabulatedFunction arrayTabLogExp = TabulatedFunctions.tabulate(logExp, 0.1, 10, 11);
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("arrayLogExp.ser"))) {
+            out.writeObject(arrayTabLogExp);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        TabulatedFunction readTabLogExp = null;
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("logExp.ser"))) {
-            readTabLogExp = (TabulatedFunction) in.readObject();
+        TabulatedFunction readArrayTabLogExp = null;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("arrayLogExp.ser"))) {
+            readArrayTabLogExp = (TabulatedFunction) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        TabulatedFunction linkedTabLogExp = new LinkedListTabulatedFunction(arrayTabLogExp);
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("linkedLogExp.ser"))) {
+            out.writeObject(linkedTabLogExp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        TabulatedFunction readLinkedTabLogExp = null;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("linkedLogExp.ser"))) {
+            readLinkedTabLogExp = (LinkedListTabulatedFunction) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         for (double i = 0.1; i <= 10; i++) {
-            System.out.println("x = " + i + ", log(exp(x)) = " + logExp.getFunctionValue(i) + ", tabLogExp(x) = " + tabLogExp.getFunctionValue(i) + ", readTabLogExp(x) = " + readTabLogExp.getFunctionValue(i));
+            System.out.println("x = " + i + ", log(exp(x)) = " + logExp.getFunctionValue(i) + ", arrayTabLogExp(x) = " + arrayTabLogExp.getFunctionValue(i) + ", readArrayTabLogExp(x) = " + readArrayTabLogExp.getFunctionValue(i)
+                    + ", linkedTabLogExp(x) = " + linkedTabLogExp.getFunctionValue(i) + ", readLinkedTabLogExp(x) = " + readLinkedTabLogExp.getFunctionValue(i));
         }
 
 
