@@ -75,7 +75,7 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for (double i = 0.1; i <= 10; i++) {
+        for (double i = 0; i <= 10; i++) {
             System.out.println("x = " + i + ", log(x) = " + log.getFunctionValue(i) + ", tabLog(x) = " + tabLog.getFunctionValue(i) + ", readLog(x) = " + inputLog.getFunctionValue(i));
         }
 

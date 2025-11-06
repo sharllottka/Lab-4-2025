@@ -18,6 +18,9 @@ public class Log implements Function {
     }
 
     public double getFunctionValue(double x) {
+        if (x <= 0) {
+            return Double.NaN;
+        }
         return Math.log(x)/Math.log(base);
     }
 }

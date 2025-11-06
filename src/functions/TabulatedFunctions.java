@@ -1,6 +1,8 @@
 package functions;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TabulatedFunctions {
 
@@ -11,13 +13,19 @@ public class TabulatedFunctions {
             throw new IllegalArgumentException("Левая граница >= правой");
         }
         double step = (rightX - leftX) / (pointsCount - 1);
-        FunctionPoint[] points;
-        points = new FunctionPoint[pointsCount];
+        List<FunctionPoint> validPoints = new ArrayList<>();
         for (int i = 0; i < pointsCount; i++) {
             double x = leftX + i * step;
             double y = function.getFunctionValue(x);
-            points[i] = new FunctionPoint(x, y);
+            if (Double.isNaN(y) || Double.isInfinite(y)) {
+                continue;
+            }
+            validPoints.add(new FunctionPoint(x, y));;
         }
+        if (pointsCount < 2) {
+            throw new IllegalArgumentException("Количество точек < 2");
+        }
+        FunctionPoint[] points = validPoints.toArray(new FunctionPoint[0]);
         return new ArrayTabulatedFunction(points);
     }
 

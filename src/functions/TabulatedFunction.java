@@ -14,9 +14,5 @@ public interface TabulatedFunction extends Function {
     void setPointY(int index, double y);
     void deletePoint(int index);
     void addPoint(FunctionPoint point) throws InappropriateFunctionPointException;
-
-    void writeExternal(ObjectOutput out) throws IOException;
-
-    void readExternal(ObjectInput in) throws IOException, ClassNotFoundException;
 }
 
